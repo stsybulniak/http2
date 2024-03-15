@@ -147,7 +147,7 @@ export class Multiplexer {
         const sessionTransports = new Map();
         const sessionData = {};
         session.addListener("stream", async (stream, headers) => {
-            console.log('session listener', this.#commandHeader, headers, headers[this.#commandHeader], '9090909090')
+            console.log('session listener')
             if (headers[this.#commandHeader] === "NOTIFY") {
                 try {
                     const data = await readWholeStream(stream);
