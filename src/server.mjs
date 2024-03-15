@@ -85,8 +85,8 @@ export class H2Server extends EventEmitter {
                 CRYPTO_CONSTANTS.SSL_OP_NO_TLSv1 |
                 CRYPTO_CONSTANTS.SSL_OP_NO_TLSv1_1
             ),
-            origin: '*',
-            origins: ['http://localhost:5173'], 
+            // origin: '*',
+            // origins: ['http://localhost:5173'], 
             allowHTTP1: options.allowHTTP1 || options.useWebSockets,
             ...(options.ssl.passphrase && { passphrase: options.ssl.passphrase }),
             // allowHalfOpen: true
