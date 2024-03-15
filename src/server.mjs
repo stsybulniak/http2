@@ -93,6 +93,14 @@ export class H2Server extends EventEmitter {
         })
 
         this.#http2Server.on("request", (req, res) => {
+            console.log(res)
+            if (req.method === 'OPTIONS') {
+                res.setHeader('Access-Control-Allow-Origin', "*");
+                res.setHeader('Access-Control-Allow-Headers', 'command');
+                res.setHeader('Access-Control-Allow-Credentials', true);
+                res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+                res.end('ok');
+            }
             if (req.httpVersion !== "2.0") {
                 this.emit("h1req", req, res); // Don't know how to shoot this one but ...
             }
