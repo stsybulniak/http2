@@ -15,6 +15,7 @@ export const readWholeStream = (stream) => {
             reject(err);
         })
         stream.addListener("end", () => {
+            console.log(chunks, 'this is the end!!!!!!!!!!')
             Buffer.concat(chunks);
             resolve(chunks);
         })

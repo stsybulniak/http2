@@ -1,4 +1,4 @@
-import {webcrypto} from "crypto";
+import { webcrypto } from "crypto";
 
 /**
  *

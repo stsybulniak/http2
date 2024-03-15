@@ -1,9 +1,9 @@
-import {DataTransport} from "./data-transport.mjs";
-import {Encoder as CBOREncoder, Decoder as CBORDecoder} from "cbor";
-import {constants as http2Constants} from "http2";
-import {ConnectionContext} from "../context.mjs";
+import { DataTransport } from "./data-transport.mjs";
+import { Encoder as CBOREncoder, Decoder as CBORDecoder } from "cbor";
+import { constants as http2Constants } from "http2";
+import { ConnectionContext } from "../context.mjs";
 
-const {HTTP2_HEADER_CONTENT_TYPE} = http2Constants;
+const { HTTP2_HEADER_CONTENT_TYPE } = http2Constants;
 
 /**
  * Response Options container usable in respond method.
@@ -45,7 +45,7 @@ export class Http2Transport extends DataTransport {
      * The headers sent or null.
      * @returns {Object<string, string | number>}
      */
-    get sentHeaders(){
+    get sentHeaders() {
         return this.#outgoingHeaders ? Object.assign({}, this.#outgoingHeaders) : null
     }
 
@@ -53,7 +53,7 @@ export class Http2Transport extends DataTransport {
      * The incoming headers.
      * @returns {Object<string, number|string>}
      */
-    get incomingHeaders(){
+    get incomingHeaders() {
         return this.#incomingHeaders;
     }
 
@@ -62,6 +62,7 @@ export class Http2Transport extends DataTransport {
      * @param chunk
      */
     #streamDataListener = (chunk) => {
+        console.log('start props inp')
         this.emit("dataChunk", chunk, this);
     };
 
@@ -88,8 +89,10 @@ export class Http2Transport extends DataTransport {
     constructor(http2Stream, incomingHeaders, sessionContext) {
         super(new ConnectionContext(sessionContext));
         this.#http2Stream = http2Stream;
-        this.#incomingHeaders = Object.fromEntries(incomingHeaders.entries ? incomingHeaders.entries() : Object.getEntries(incomingHeaders));
+        this.#incomingHeaders = Object.fromEntries(incomingHeaders.entries ? incomingHeaders.entries() : Object.entries(incomingHeaders));
         Object.freeze(this.#incomingHeaders);
+        console.log(this.incomingHeaders, 'headers!!!!')
+        this.startProcessingInput();
     }
 
     /**

@@ -1,10 +1,11 @@
-import {H2Server} from "./server.mjs";
-import {Decoder as CBORDecorder, Encoder as CBOREncoder} from "cbor";
-import {randomBigIntNotInKeys} from "./utils/random-bigint.mjs";
-import {WsTransport} from "./transporters/ws-transport.mjs";
-import {Http2Transport} from "./transporters/http2-transport.mjs";
-import {readWholeStream} from "./utils/read-data.mjs";
-import {constants as http2Constants} from "http2";
+import { H2Server } from "./server.mjs";
+import { Decoder as CBORDecorder, Encoder as CBOREncoder } from "cbor";
+import { randomBigIntNotInKeys } from "./utils/random-bigint.mjs";
+import { WsTransport } from "./transporters/ws-transport.mjs";
+import { Http2Transport } from "./transporters/http2-transport.mjs";
+import { readWholeStream } from "./utils/read-data.mjs";
+import { constants as http2Constants } from "http2";
+import { Service } from "./service.mjs";
 
 const {
     HTTP2_HEADER_STATUS,
@@ -52,6 +53,7 @@ export class Multiplexer {
     };
 
     #wsConnectionListener = (wsConn, wsSession) => {
+        console.log('-------********---------')
         /**
          * @type {Map<bigint, DataTransport>}
          */
@@ -145,17 +147,23 @@ export class Multiplexer {
         const sessionTransports = new Map();
         const sessionData = {};
         session.addListener("stream", async (stream, headers) => {
+            console.log('session listener', this.#commandHeader, headers, headers[this.#commandHeader], '9090909090')
             if (headers[this.#commandHeader] === "NOTIFY") {
                 try {
                     const data = await readWholeStream(stream);
+                    console.log(data, 'ggggggggggg')
+                    // const tmpdata = CBOREncoder.encode('{"key": "value"}')
+                    // let decodedData = CBORDecorder.decodeAllSync(tmpdata);
                     let decodedData = CBORDecorder.decodeAllSync(data);
                     // the decoded data has to be a message with the details of the continue notification (streamId etc)
-
+                    console.log('--==--', decodedData, '---000--')
+                    const s = new Service(sessionTransports);
                 } catch (e) {
+                    console.log(e, '55555')
                     if (!stream.closed) {
                         stream.respond({
                             [HTTP2_HEADER_STATUS]: HTTP_STATUS_NOT_FOUND
-                        }, {endStream: true});
+                        }, { endStream: true });
                     }
                 }
             }
@@ -185,6 +193,6 @@ export class Multiplexer {
     #attachListeners() {
         this.#server.addListener("wsConn", this.#wsConnectionListener);
         this.#server.addListener("h1req", this.#h1ReqListener);
-        this.#server.addListener("h2session", this.#h2StreamListener);
+        this.#server.addListener("h2Session", this.#h2StreamListener);
     }
 }

@@ -2,9 +2,11 @@
   "name": "nodebase",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.mjs",
+    "dev": "npx nodemon --inspect index.mjs",
+    "import": "docker-compose exec -it mongo mongoimport --db sampleDb --collection users --file data.json --jsonArray"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +18,8 @@
     "cbor": "^9.0.1",
     "mongodb": "^5.7.0",
     "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }

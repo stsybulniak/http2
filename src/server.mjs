@@ -1,6 +1,6 @@
-import http2, {constants as http2Constants} from "node:http2";
+import http2, { constants as http2Constants } from "node:http2";
 import EventEmitter from "node:events";
-import {constants as CRYPTO_CONSTANTS} from "crypto";
+import { constants as CRYPTO_CONSTANTS } from "crypto";
 
 let wsModule = null;
 try {
@@ -68,7 +68,7 @@ export class H2Server extends EventEmitter {
         }
 
         if (options.useWebSockets) {
-            this.#wsServer = new wsModule.WebSocketServer({noServer: true});
+            this.#wsServer = new wsModule.WebSocketServer({ noServer: true });
             this.#wsServer.on("connection", (ws) => {
                 const wsSession = {};
                 this.emit("wsConn", ws, wsSession); // should be doing the multiplexing here so that it passes everything to the oncoming services.
@@ -85,8 +85,10 @@ export class H2Server extends EventEmitter {
                 CRYPTO_CONSTANTS.SSL_OP_NO_TLSv1 |
                 CRYPTO_CONSTANTS.SSL_OP_NO_TLSv1_1
             ),
+            origin: '*',
+            origins: ['http://localhost:5173'], 
             allowHTTP1: options.allowHTTP1 || options.useWebSockets,
-            ...(options.ssl.passphrase && {passphrase: options.ssl.passphrase}),
+            ...(options.ssl.passphrase && { passphrase: options.ssl.passphrase }),
             // allowHalfOpen: true
         })
 
@@ -103,7 +105,7 @@ export class H2Server extends EventEmitter {
 
         this.#http2Server.on("session", (session) => {
             const h2SessionData = {};
-            // session!!! console.log!!
+            console.log('hello amigo!!!')
             this.emit("h2Session", session, h2SessionData);
         })
 

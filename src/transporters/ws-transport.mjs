@@ -1,6 +1,6 @@
-import {DataTransport} from "./data-transport.mjs";
-import {ConnectionContext} from "../context.mjs";
-import {Encoder as CBOREncoder} from "cbor";
+import { DataTransport } from "./data-transport.mjs";
+import { ConnectionContext } from "../context.mjs";
+import { Encoder as CBOREncoder } from "cbor";
 
 
 // The actual transport has to be doing some multiplexing on the level above which simulates the actual sessions and so on.
@@ -10,6 +10,8 @@ export class WsTransport extends DataTransport {
      * @type {WebSocket}
      */
     #wsConn = null;
+
+    #http2Stream = null;
 
     /**
      *
@@ -52,11 +54,12 @@ export class WsTransport extends DataTransport {
      * @param {Object<string, string | number> | IncomingHttpHeaders} incomingHeaders
      * @param {Object<string, any>} sessionContext
      */
-    constructor(streamId, wsConn, incomingHeaders, sessionContext) {
+    constructor(streamId, wsConn, incomingHeaders, sessionContext, http2Stream) {
         super(new ConnectionContext(sessionContext));
         this.#wsConn = wsConn;
         this.#streamId = streamId;
         this.#incomingHeaders = Object.fromEntries(incomingHeaders.entries ? incomingHeaders.entries() : Object.getEntries(incomingHeaders));
+        this.#http2Stream = http2Stream;
     }
 
     /**

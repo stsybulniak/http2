@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  mongo:
+    container_name: node-base-mongo
+    image: mongo:7.0.5
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo-data:/data/db
+      - ./data.json:/data.json
+    restart: on-failure
+  
