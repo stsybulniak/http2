@@ -151,13 +151,10 @@ export class Multiplexer {
             if (headers[this.#commandHeader] === "NOTIFY") {
                 try {
                     const data = await readWholeStream(stream);
-                    console.log(data, 'ggggggggggg')
-                    // const tmpdata = CBOREncoder.encode('{"key": "value"}')
-                    // let decodedData = CBORDecorder.decodeAllSync(tmpdata);
-                    let decodedData = CBORDecorder.decodeAllSync(data);
+                    let decodedData = CBORDecorder.decodeAllSync(data[0]);
                     // the decoded data has to be a message with the details of the continue notification (streamId etc)
                     console.log('--==--', decodedData, '---000--')
-                    const s = new Service(sessionTransports);
+                    const s = new Service(sessionTransports, decodedData);
                 } catch (e) {
                     console.log(e, '55555')
                     if (!stream.closed) {
